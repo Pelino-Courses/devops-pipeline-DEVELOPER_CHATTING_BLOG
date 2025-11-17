@@ -1,9 +1,9 @@
 # Default owners for everything in the repo
-* @bananezaromeo
+* @bananezaromeo  @0783896498
 
 # Infrastructure code
 /terraform/ @bananezaromeo   # TEMP until you add the real username
-/ansible/ @bananezaromeo     # TEMP until you add the real username
+/ansible/ @0783896498     # TEMP until you add the real username
 
 # CI/CD pipelines
 /.github/workflows/ @bananezaromeo
