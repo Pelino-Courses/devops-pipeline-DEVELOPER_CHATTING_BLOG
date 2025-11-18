@@ -1,0 +1,17 @@
+name: Move to Done when PR is merged
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  move_to_done:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move issue linked to merged PR to Done
+        uses: actions-ecosystem/action-move-project-card@v1
+        with:
+          project-url: https://github.com/bananezaromeo/devops-pipeline-DEVELOPER_CHATTING_BLOG/projects/1
+          column-name: Done
+          github-token: ${{ secrets.GITHUB_TOKEN }}
