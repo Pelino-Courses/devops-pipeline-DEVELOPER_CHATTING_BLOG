@@ -1,0 +1,16 @@
+name: Move to In Progress when assigned
+
+on:
+  issues:
+    types: [assigned]
+
+jobs:
+  move_to_in_progress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move assigned issue to In Progress
+        uses: actions-ecosystem/action-move-project-card@v1
+        with:
+          project-url: https://github.com/bananezaromeo/devops-pipeline-DEVELOPER_CHATTING_BLOG/projects/1
+          column-name: In Progress
+          github-token: ${{ secrets.GITHUB_TOKEN }}
