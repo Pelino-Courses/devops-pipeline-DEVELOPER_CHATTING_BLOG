@@ -12,6 +12,5 @@ jobs:
         uses: alex-page/github-project-automation-plus@v0.9.2
         with:
           project-url: https://github.com/users/bananezaromeo/projects/4
-          column-name: Status
-          status-value: In Review
+          column-name: In Review
           github-token: ${{ secrets.GITHUB_TOKEN }}
