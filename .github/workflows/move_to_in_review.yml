@@ -11,6 +11,7 @@ jobs:
       - name: Move issue linked to PR to In Review
         uses: alex-page/github-project-automation-plus@v0.8.3
         with:
-          project-url: https://github.com/users/bananezaromeo/projects/4
-          column-name: In Review
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          project: 'https://github.com/users/bananezaromeo/projects/4'
+          column: 'In Review'
+          action: 'update'
