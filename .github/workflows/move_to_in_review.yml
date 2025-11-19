@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Move issue linked to PR to In Review
-        uses: alex-page/github-project-automation-plus@v0.9.2
+        uses: alex-page/github-project-automation-plus@v0.8.3
         with:
           project-url: https://github.com/users/bananezaromeo/projects/4
           column-name: In Review
