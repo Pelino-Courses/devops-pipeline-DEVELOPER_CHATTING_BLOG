@@ -12,6 +12,6 @@ jobs:
         uses: alex-page/github-project-automation-plus@v0.8.3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          project: 'https://github.com/users/bananezaromeo/projects/4'
+          project: ' DevOps Pipeline Implementation'
           column: 'In Progress'
           action: 'update'
