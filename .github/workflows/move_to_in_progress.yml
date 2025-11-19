@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Move assigned issue to In Progress
-        uses: actions-ecosystem/action-move-project-card@v1
+        uses: alex-page/github-project-automation-plus@v0.9.2
         with:
-          project-url: https://github.com/bananezaromeo/devops-pipeline-DEVELOPER_CHATTING_BLOG/projects/1
+          project-url: https://github.com/users/bananezaromeo/projects/4
           column-name: In Progress
           github-token: ${{ secrets.GITHUB_TOKEN }}
