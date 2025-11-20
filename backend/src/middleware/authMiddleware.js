@@ -1,0 +1,28 @@
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const User = require('../models/User'); // optional: fetch full user if needed
+
+const authMiddleware = async (req, res, next) => {
+  try {
+    // Get token from header
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Optional: fetch user from DB if needed
+    // const user = await User.findById(decoded.userId).select('-password');
+    // if (!user) return res.status(401).json({ message: 'User not found' });
+    // req.user = user;
+
+    // Attach user info from token
+    req.user = { id: decoded.userId }; // use req.user.id in controllers
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ message: 'Invalid or expired token' });
+  }
+};
+
+module.exports = authMiddleware;

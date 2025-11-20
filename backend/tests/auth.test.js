@@ -1,0 +1,9 @@
+const request = require('supertest');
+const app = require('../src/app'); // adjust if needed
+
+describe('Auth API', () => {
+  it('should return health check', async () => {
+    const res = await request(app).get('/health');
+    expect(res.statusCode).toEqual(200);
+  });
+});
