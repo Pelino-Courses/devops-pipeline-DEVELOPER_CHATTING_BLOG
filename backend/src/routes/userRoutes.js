@@ -1,0 +1,45 @@
+const express = require('express');
+const router = express.Router();
+const authMiddleware = require('../middleware/authMiddleware');
+const User = require('../models/User');
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all verified users except current user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   username:
+ *                     type: string
+ *                   email:
+ *                     type: string
+ *                   _id:
+ *                     type: string
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/users', authMiddleware, async (req, res) => {
+  try {
+    const users = await User.find({ 
+      isVerified: true, 
+      _id: { $ne: req.user.userId } // Exclude current user
+    }).select('username email _id');
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+module.exports = router;
