@@ -11,6 +11,8 @@ services:
       - mongo_data:/data/db
 
   backend:
+    env_file:
+      - ./backend/.env
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -19,9 +21,6 @@ services:
     environment:
       - PORT=5000
       - MONGO_URI=mongodb://mongodb:27017/chatapp
-      - JWT_SECRET=${JWT_SECRET}
-      - EMAIL_USER=${EMAIL_USER}
-      - EMAIL_PASS=${EMAIL_PASS}
     ports:
       - "5000:5000"
     depends_on:
