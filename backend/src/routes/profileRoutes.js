@@ -11,6 +11,7 @@ const User = require("../models/User");
       if (!user) return res.status(404).json({ message: "User not found" });
       res.status(200).json(user);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err);
       res.status(500).json({ message: "Server error" });
     }
