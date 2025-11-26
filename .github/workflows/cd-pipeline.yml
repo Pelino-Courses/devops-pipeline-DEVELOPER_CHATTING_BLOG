@@ -9,6 +9,11 @@ env:
   NODE_VERSION: '18'
   ACR_NAME: ${{ secrets.ACR_NAME }}
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 jobs:
   build-and-push:
     name: Build and Push Docker Images
