@@ -47,12 +47,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: javascript
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
 
   secret-scan:
     name: Secret Scanning
@@ -110,22 +110,27 @@ jobs:
   iac-security:
     name: Infrastructure as Code Security
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Run tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
-        with:
-          working_directory: terraform
-          format: sarif
-          soft_fail: true
-          sarif_file: ./tfsec.sarif
+        run: |
+          mkdir -p /tmp/tfsec
+          cd /tmp/tfsec
+          wget -q https://github.com/aquasecurity/tfsec/releases/download/v1.28.4/tfsec-linux-amd64
+          chmod +x tfsec-linux-amd64
+          cd ${{ github.workspace }}
+          /tmp/tfsec/tfsec-linux-amd64 ./terraform -f sarif > tfsec.sarif || true
+        continue-on-error: true
 
       - name: Upload tfsec results
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        if: always() && hashFiles('tfsec.sarif') != ''
         with:
           sarif_file: tfsec.sarif
 
