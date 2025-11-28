@@ -133,17 +133,18 @@ jobs:
         working-directory: ./ansible
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
-          ACR_NAME: ${{ secrets.ACR_NAME }}
-          ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
         run: |
-          ansible-playbook playbooks/setup-server.yml -i inventory/hosts -v
+          ansible-playbook playbooks/setup-server.yml -i inventory/hosts \
+            -e "acr_name=${{ secrets.ACR_NAME }}" \
+            -e "acr_login_server=${{ secrets.ACR_LOGIN_SERVER }}" \
+            -e "image_tag=${{ needs.build-and-push.outputs.image_tag }}" \
+            -e "db_user=${{ secrets.DB_USER }}" \
+            -e "db_password=${{ secrets.DB_PASSWORD }}" \
+            -e "db_name=${{ secrets.DB_NAME }}" \
+            -v
 
       - name: Verify deployment
         run: |
