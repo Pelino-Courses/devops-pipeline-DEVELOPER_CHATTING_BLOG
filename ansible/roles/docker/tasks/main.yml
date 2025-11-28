@@ -58,6 +58,35 @@
     apt-get install --only-upgrade -y docker-ce docker-ce-cli containerd.io
   when: ansible_os_family == "Debian"
 
+- name: Restart Docker daemon to load new client version
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
+
+- name: Wait for Docker daemon to be ready
+  shell: docker ps
+  retries: 5
+  delay: 2
+  until: docker_status is succeeded
+  register: docker_status
+  ignore_errors: yes
+
+- name: Check Docker client and daemon versions
+  shell: |
+    echo "Docker client version:"
+    docker version --format '{{.Client.Version}}'
+    echo "Docker daemon version:"
+    docker version --format '{{.Server.Version}}'
+    echo "Docker API version:"
+    docker version --format '{{.Server.APIVersion}}'
+  register: docker_versions
+  ignore_errors: yes
+
+- name: Display Docker versions
+  debug:
+    msg: "{{ docker_versions.stdout }}"
+
 - name: Create Docker daemon configuration
   copy:
     content: |
