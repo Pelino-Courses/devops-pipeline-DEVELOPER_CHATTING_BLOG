@@ -136,7 +136,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   ]
 
   lifecycle {
-    ignore_changes = all
+    ignore_changes = [all]
   }
 
   os_disk {
