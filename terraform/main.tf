@@ -134,10 +134,12 @@ resource "azurerm_linux_virtual_machine" "main" {
     azurerm_network_interface.main.id,
   ]
 
-  # Use the SSH public key variable
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = trimspace(var.ssh_public_key)
+  dynamic "admin_ssh_key" {
+    for_each = length(var.ssh_public_key) > 0 ? [1] : []
+    content {
+      username   = var.admin_username
+      public_key = trimspace(var.ssh_public_key)
+    }
   }
 
   lifecycle {
