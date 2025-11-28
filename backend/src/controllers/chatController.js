@@ -1,1 +1,22 @@
-const Message = require("../models/Message"); // Get all messages between logged-in user and another userconst getMessages = async (req, res) => {  try {    const userId = req.user.id; // from auth middleware    const otherUserId = req.params.userId;    const messages = await Message.find({      $or: [        { sender: userId, receiver: otherUserId },        { sender: otherUserId, receiver: userId },      ],    }).sort({ createdAt: 1 });    res.status(200).json(messages);  } catch (err) {    console.error(err);    res.status(500).json({ message: 'Server error' });  }};module.exports = { getMessages };
+const Message = require('../models/Message');
+
+// Get all messages between logged-in user and another user
+const getMessages = async (req, res) => {
+  try {
+    const userId = req.user.id; // from auth middleware
+    const otherUserId = req.params.userId;
+    const messages = await Message.find({
+      $or: [
+        { sender: userId, receiver: otherUserId },
+        { sender: otherUserId, receiver: userId },
+      ],
+    }).sort({ createdAt: 1 });
+    res.status(200).json(messages);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = { getMessages };

@@ -20,6 +20,7 @@ const transporter = nodemailer.createTransport({
 // Helper function to send OTP email
 const sendOTPEmail = async (username, email, otp) => {
   try {
+    // eslint-disable-next-line no-console
     console.log(`[EMAIL] Sending OTP to ${email}`);
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -28,8 +29,10 @@ const sendOTPEmail = async (username, email, otp) => {
       text: `Hello ${username},\n\nYour OTP code is: ${otp}\nIt will expire in 5 minutes.\n\nThank you!`,
     };
     await transporter.sendMail(mailOptions);
+    // eslint-disable-next-line no-console
     console.log(`[EMAIL] OTP email sent successfully to ${email}`);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('[EMAIL] Email sending failed:', error.message);
     throw new Error(`Failed to send OTP email: ${error.message}`);
   }
@@ -38,10 +41,12 @@ const sendOTPEmail = async (username, email, otp) => {
 // Signup
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
+  // eslint-disable-next-line no-console
   console.log(`[SIGNUP] Attempt: username=${username}, email=${email}`);
   
   try {
     if (!username || !email || !password) {
+      // eslint-disable-next-line no-console
       console.log('[SIGNUP] Missing fields');
       return res.status(400).json({ message: 'Missing required fields' });
     }
@@ -72,10 +77,12 @@ exports.signup = async (req, res) => {
       otpVerified: false,
     });
     await user.save();
+    // eslint-disable-next-line no-console
     console.log(`[SIGNUP] User created: ${email}`);
     await sendOTPEmail(username, email, otp);
     res.status(201).json({ message: 'User created, OTP sent to email' });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('[SIGNUP] Error:', err.message);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
@@ -96,6 +103,7 @@ exports.verifyOTP = async (req, res) => {
     await user.save();
     res.status(200).json({ message: 'OTP verified successfully' });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('[VERIFY_OTP] Error:', err.message);
     res.status(500).json({ message: 'Server error' });
   }
@@ -117,6 +125,7 @@ exports.signin = async (req, res) => {
     });
     res.status(200).json({ token, userId: user._id, username: user.username, email: user.email });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('[SIGNIN] Error:', err.message);
     res.status(500).json({ message: 'Server error' });
   }
