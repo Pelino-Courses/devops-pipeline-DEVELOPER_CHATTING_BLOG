@@ -89,6 +89,24 @@
   debug:
     msg: "Backend logs:\n{{ backend_logs.stdout }}"
 
+- name: Check if port 80 is listening
+  shell: netstat -tuln | grep 80 || ss -tuln | grep 80 || echo "Port 80 status check completed"
+  register: port_80_status
+  ignore_errors: yes
+
+- name: Show port 80 status
+  debug:
+    msg: "Port 80 status:\n{{ port_80_status.stdout }}"
+
+- name: Check UFW status
+  shell: ufw status | grep 80 || echo "UFW check completed"
+  register: ufw_status
+  ignore_errors: yes
+
+- name: Show UFW status
+  debug:
+    msg: "UFW port 80 status:\n{{ ufw_status.stdout }}"
+
 - name: Wait for application to be ready
   uri:
     url: "http://localhost:5000/health"
