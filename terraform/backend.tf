@@ -1,6 +1,6 @@
 terraform {
   required_version = ">= 1.5.0"
-  
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -14,7 +14,7 @@ terraform {
 
   cloud {
     organization = "group_8_org"
-    
+
     workspaces {
       name = "devops-pipeline-infrastructure"
     }
