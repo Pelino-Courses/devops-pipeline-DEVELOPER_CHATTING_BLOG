@@ -48,9 +48,15 @@
 
 - name: Install Docker Compose
   get_url:
-    url: "https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64"
+    url: "https://github.com/docker/compose/releases/download/v2.28.1/docker-compose-linux-x86_64"
     dest: /usr/local/bin/docker-compose
     mode: '0755'
+
+- name: Upgrade Docker client to latest
+  shell: |
+    apt-get update
+    apt-get install --only-upgrade -y docker-ce docker-ce-cli containerd.io
+  when: ansible_os_family == "Debian"
 
 - name: Create Docker daemon configuration
   copy:
