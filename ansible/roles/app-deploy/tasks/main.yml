@@ -7,9 +7,13 @@
     group: docker
     mode: '0755'
 
+- name: Debug Ansible variables
+  debug:
+    msg: "acr_name={{ acr_name }}, acr_login_server={{ acr_login_server }}"
+
 - name: Login to Azure Container Registry
   shell: |
-    az acr login --name {{ acr_name }}
+    az acr login --name "{{ acr_name }}"
   environment:
     AZURE_CLIENT_ID: "{{ lookup('env', 'ARM_CLIENT_ID') }}"
     AZURE_CLIENT_SECRET: "{{ lookup('env', 'ARM_CLIENT_SECRET') }}"

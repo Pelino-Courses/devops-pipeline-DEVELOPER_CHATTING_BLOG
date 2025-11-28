@@ -122,19 +122,21 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VM_PUBLIC_IP }} >> ~/.ssh/known_hosts
 
-      - name: Create Ansible inventory
+      - name: Create Ansible inventory and variables
         run: |
           cat > ansible/inventory/hosts << EOF
           [app_servers]
           azure-vm ansible_host=${{ secrets.VM_PUBLIC_IP }} ansible_user=azureuser
+          EOF
           
-          [app_servers:vars]
-          acr_name=${{ secrets.ACR_NAME }}
-          acr_login_server=${{ secrets.ACR_LOGIN_SERVER }}
-          image_tag=${{ needs.build-and-push.outputs.image_tag }}
-          db_user=${{ secrets.DB_USER }}
-          db_password=${{ secrets.DB_PASSWORD }}
-          db_name=${{ secrets.DB_NAME }}
+          cat > ansible/group_vars/app_servers.yml << EOF
+          ---
+          acr_name: ${{ secrets.ACR_NAME }}
+          acr_login_server: ${{ secrets.ACR_LOGIN_SERVER }}
+          image_tag: ${{ needs.build-and-push.outputs.image_tag }}
+          db_user: ${{ secrets.DB_USER }}
+          db_password: ${{ secrets.DB_PASSWORD }}
+          db_name: ${{ secrets.DB_NAME }}
           EOF
 
       - name: Run Ansible deployment
