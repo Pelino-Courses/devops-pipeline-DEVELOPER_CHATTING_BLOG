@@ -111,9 +111,9 @@ jobs:
       - name: Install Ansible
         run: |
           pip install ansible
+          pip install azure-cli-core azure-identity
           ansible-galaxy collection install azure.azcollection
           ansible-galaxy collection install community.docker
-          pip install -r https://raw.githubusercontent.com/ansible-collections/azure/dev/requirements-azure.txt
 
       - name: Setup SSH key
         run: |
