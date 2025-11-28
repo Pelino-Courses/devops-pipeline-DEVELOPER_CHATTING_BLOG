@@ -1,4 +1,19 @@
 ---
+- name: Stop and remove old containers
+  shell: |
+    docker-compose -f /opt/devops-app/docker-compose.yml down -v 2>/dev/null || true
+    docker ps -a | grep -E "(frontend|backend|mongodb)" | awk '{print $1}' | xargs docker rm -f 2>/dev/null || true
+  ignore_errors: yes
+  register: cleanup_result
+
+- name: Show cleanup result
+  debug:
+    msg: "Cleanup: {{ cleanup_result.stdout }}\n{{ cleanup_result.stderr }}"
+
+- name: Remove dangling images
+  shell: docker image prune -f --filter "dangling=true" 2>&1 || true
+  ignore_errors: yes
+
 - name: Create application directory
   file:
     path: /opt/devops-app
@@ -43,15 +58,15 @@
     msg: "{{ compose_content.stdout }}"
 
 - name: Pull latest images
-  community.docker.docker_compose:
-    project_src: /opt/devops-app
-    pull: yes
+  shell: |
+    cd /opt/devops-app
+    docker-compose pull --no-parallel 2>&1
   register: pull_result
   ignore_errors: yes
 
 - name: Show pull errors
   debug:
-    msg: "Pull result: {{ pull_result }}"
+    msg: "Pull result: {{ pull_result.stdout }}\n{{ pull_result.stderr }}"
 
 - name: Check Docker daemon status
   shell: docker ps
