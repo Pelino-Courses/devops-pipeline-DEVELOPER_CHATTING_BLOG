@@ -32,4 +32,8 @@ variable "ssh_public_key" {
   description = "SSH public key for VM access"
   type        = string
   sensitive   = true
+  validation {
+    condition     = length(var.ssh_public_key) > 0 && (startswith(var.ssh_public_key, "ssh-rsa") || startswith(var.ssh_public_key, "ssh-ed25519"))
+    error_message = "SSH public key must be a valid SSH key starting with 'ssh-rsa' or 'ssh-ed25519'."
+  }
 }

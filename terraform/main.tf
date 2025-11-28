@@ -83,6 +83,10 @@ resource "azurerm_network_security_group" "main" {
   }
 
   tags = azurerm_resource_group.main.tags
+
+  lifecycle {
+    ignore_changes = [security_rule]
+  }
 }
 
 # Associate NSG with Subnet
@@ -133,7 +137,11 @@ resource "azurerm_linux_virtual_machine" "main" {
   # Use the SSH public key variable
   admin_ssh_key {
     username   = var.admin_username
-    public_key = var.ssh_public_key
+    public_key = trimspace(var.ssh_public_key)
+  }
+
+  lifecycle {
+    ignore_changes = [os_disk]
   }
 
   os_disk {
