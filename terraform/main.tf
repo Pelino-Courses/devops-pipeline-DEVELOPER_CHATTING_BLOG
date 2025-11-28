@@ -129,21 +129,14 @@ resource "azurerm_linux_virtual_machine" "main" {
   resource_group_name = azurerm_resource_group.main.name
   size                = var.vm_size
   admin_username      = var.admin_username
+  disable_password_authentication = false
 
   network_interface_ids = [
     azurerm_network_interface.main.id,
   ]
 
-  dynamic "admin_ssh_key" {
-    for_each = length(var.ssh_public_key) > 0 ? [1] : []
-    content {
-      username   = var.admin_username
-      public_key = trimspace(var.ssh_public_key)
-    }
-  }
-
   lifecycle {
-    ignore_changes = [os_disk, admin_ssh_key]
+    ignore_changes = all
   }
 
   os_disk {
