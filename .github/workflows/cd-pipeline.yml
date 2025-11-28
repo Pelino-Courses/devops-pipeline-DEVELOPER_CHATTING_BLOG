@@ -50,8 +50,6 @@ jobs:
           tags: |
             ${{ secrets.ACR_LOGIN_SERVER }}/devops-backend:${{ steps.meta.outputs.version }}
             ${{ secrets.ACR_LOGIN_SERVER }}/devops-backend:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           build-args: |
             BUILD_DATE=${{ steps.meta.outputs.date }}
             VCS_REF=${{ github.sha }}
@@ -64,8 +62,6 @@ jobs:
           tags: |
             ${{ secrets.ACR_LOGIN_SERVER }}/devops-frontend:${{ steps.meta.outputs.version }}
             ${{ secrets.ACR_LOGIN_SERVER }}/devops-frontend:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           build-args: |
             BUILD_DATE=${{ steps.meta.outputs.date }}
             VCS_REF=${{ github.sha }}
@@ -85,10 +81,10 @@ jobs:
           output: 'trivy-frontend-results.sarif'
 
       - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
-          sarif_file: '.'
+          sarif_file: 'trivy-*-results.sarif'
 
   deploy:
     name: Deploy to Azure VM
